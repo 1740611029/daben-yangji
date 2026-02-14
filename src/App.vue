@@ -282,7 +282,7 @@ export default {
           const script = document.createElement('script')
           
           // 设置脚本地址，使用原始URL，添加时间戳防止缓存
-          const url = `http://fundgz.1234567.com.cn/js/${code}.js?_=${Date.now()}`
+          const url = `https://fundgz.1234567.com.cn/js/${code}.js?_=${Date.now()}`
           console.log('请求基金数据URL:', url)
           script.src = url
           script.type = 'text/javascript'
