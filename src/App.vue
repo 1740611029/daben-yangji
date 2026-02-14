@@ -97,7 +97,6 @@ export default {
     }
   },
   async mounted() {
-    console.warn("222")
     // 检查 indexDB 是否已存储基金数据
     const hasData = await hasFunds()
     
@@ -113,7 +112,6 @@ export default {
         // 启动自动刷新
         this.startAutoRefresh()
       } catch (error) {
-        console.error('初始化基金数据失败:', error)
         // 存储失败，也隐藏 loading 并继续
         this.loading = false
         this.loadFromStorage()
@@ -175,18 +173,13 @@ export default {
     
     // 启动自动刷新
     startAutoRefresh() {
-      console.log('========== 启动自动刷新 ==========')
       if (this.refreshTimer) {
-        console.log('清除已有定时器')
         clearInterval(this.refreshTimer)
       }
       
-      console.log('设置定时器，间隔:', this.settings.refreshInterval, '秒')
       this.refreshTimer = setInterval(() => {
-        console.log('定时器触发，执行刷新')
         this.refreshFunds()
       }, this.settings.refreshInterval * 1000)
-      console.log('========== 自动刷新已启动 ==========')
     },
     
     // 添加基金
@@ -227,14 +220,12 @@ export default {
         // 添加基金后刷新所有基金的实时估值
         this.refreshFunds()
       } catch (error) {
-        console.error('添加基金失败:', error)
         this.$message.error('添加基金失败，请稍后重试')
       }
     },
     
     // 获取基金实时估值数据
     fetchFundData(code) {
-      console.log('开始获取基金数据:', code)
       return new Promise((resolve, reject) => {
         try {
           // 保存原始的 jsonpgz 函数（如果存在）
@@ -244,7 +235,6 @@ export default {
           
           // 定义全局回调函数
           window.jsonpgz = function(data) {
-            console.log('收到基金数据:', code, data)
             // 检查是否已经resolve过，避免重复
             if (resolved) return
             resolved = true
@@ -283,11 +273,9 @@ export default {
           
           // 设置脚本地址，使用原始URL，添加时间戳防止缓存
           const url = `http://fundgz.1234567.com.cn/js/${code}.js?_=${Date.now()}`
-          console.log('请求基金数据URL:', url)
           script.src = url
           script.type = 'text/javascript'
           script.onerror = function() {
-            console.error('获取基金数据失败:', code)
             // 检查是否已经resolve过
             if (resolved) return
             resolved = true
@@ -321,11 +309,9 @@ export default {
           
           // 添加到页面
           document.body.appendChild(script)
-          console.log('脚本已添加到页面:', code)
           
           // 添加超时处理
           timeoutId = setTimeout(() => {
-            console.error('获取基金数据超时:', code)
             // 检查是否已经resolve过
             if (resolved) return
             resolved = true
@@ -352,7 +338,6 @@ export default {
             }
           }, 5000) // 5秒超时
         } catch (error) {
-          console.error('获取基金数据失败:', code, error)
           // 如果获取失败，返回默认数据
           resolve({
             netWorth: '1.0000',
@@ -374,7 +359,6 @@ export default {
             
             // 定义全局回调函数
             window[callbackName] = function(data) {
-              console.log('获取基金历史数据:', code, data)
               resolve(data)
               
               // 清理
@@ -397,7 +381,6 @@ export default {
             
             // 添加超时处理
             setTimeout(() => {
-              console.error('获取基金历史数据超时:', code)
               delete window[callbackName]
               try {
                 document.body.removeChild(script)
@@ -407,12 +390,10 @@ export default {
               resolve(null)
             }, 5000) // 5秒超时
           } catch (error) {
-            console.error('获取基金历史数据失败:', code, error)
             resolve(null)
           }
         })
       } catch (error) {
-        console.error('获取基金历史数据失败:', code, error)
         return null
       }
     },
@@ -453,7 +434,6 @@ export default {
     
     // 刷新基金数据
     async refreshFunds() {
-      console.log('========== 开始刷新基金数据 ==========')
       try {
         // 判断当前时间是否大于晚上7点半
         const now = new Date()
@@ -463,19 +443,12 @@ export default {
         const dayOfWeek = now.getDay()
         const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5
         
-        console.log('刷新基金数据 - 时间:', now.toLocaleString(), '是否工作日:', isWeekday, '是否大于7点半:', isAfter730PM)
-        console.log('基金列表长度:', this.funds.length)
-        console.log('基金列表:', this.funds)
-        
         // 使用for循环而不是Promise.all，确保请求按顺序执行，避免数据错乱
         for (let i = 0; i < this.funds.length; i++) {
           const fund = this.funds[i]
           
-          console.log('处理基金:', fund.code, fund.name, '已更新:', fund.updated)
-          
           // 如果基金已更新，则跳过
           if (fund.updated) {
-            console.log('基金已更新，跳过:', fund.code)
             continue
           }
           
@@ -491,19 +464,13 @@ export default {
           })
           
           // 如果是周末直接请求，如果是工作日则判断是否大于晚上7点半
-          console.log('判断是否请求历史数据 - 是否周末:', !isWeekday, '是否大于7点半:', isAfter730PM, '结果:', !isWeekday || isAfter730PM)
-          
           if (!isWeekday || isAfter730PM) {
             // 检查基金是否已更新，如果已更新则跳过历史数据请求
             if (this.funds[i].updated) {
-              console.log('基金已更新，跳过历史数据请求:', fund.code)
               continue
             }
             
-            console.log('请求历史数据:', fund.code)
             const historyData = await this.fetchFundHistory(fund.code)
-            
-            console.log('历史数据返回:', fund.code, historyData)
             
             if (historyData && historyData.Data && historyData.Data.LSJZList && historyData.Data.LSJZList.length > 0) {
               const latestData = historyData.Data.LSJZList[0]
@@ -529,8 +496,6 @@ export default {
                 shouldUpdate = dataDate === fridayDate
               }
               
-              console.log('日期判断:', fund.code, '数据日期:', dataDate, '目标日期:', isWeekday ? today : fridayDate, '是否更新:', shouldUpdate)
-              
               if (shouldUpdate) {
                 // 替换实时估值的值为接口返回的当日涨跌幅
                 this.$set(this.funds, i, {
@@ -538,7 +503,6 @@ export default {
                   growthRate: parseFloat(latestData.JZZZL),
                   updated: true
                 })
-                console.log('基金已更新:', fund.code, '涨跌幅:', latestData.JZZZL, 'updated:', this.funds[i].updated)
               }
             }
           }
@@ -549,14 +513,9 @@ export default {
         
         // 保存到本地存储
         this.saveToStorage()
-        
-        console.log('更新后的基金列表:', this.funds)
-        console.log('========== 刷新基金数据完成 ==========')
       } catch (error) {
-        console.error('刷新基金数据失败:', error)
       }
-    },
-    
+    },    
     // 获取涨跌幅样式类
     getGrowthRateClass(rate) {
       if (rate > 0) {
