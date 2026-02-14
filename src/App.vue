@@ -97,6 +97,7 @@ export default {
     }
   },
   async mounted() {
+    console.warn("1111")
     // 检查 indexDB 是否已存储基金数据
     const hasData = await hasFunds()
     
