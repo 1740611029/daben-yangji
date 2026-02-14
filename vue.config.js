@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/daben-yangji/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/daben-yangji/' : './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
