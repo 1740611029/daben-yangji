@@ -20,8 +20,8 @@ module.exports = {
           '^/api': ''
         },
         headers: {
-          'Referer': 'https://fundf10.eastmoney.com/',
-          'Origin': 'https://fundf10.eastmoney.com'
+          'Referer': 'http://fundf10.eastmoney.com/',
+          'Origin': 'http://fundf10.eastmoney.com'
         }
       }
     }
