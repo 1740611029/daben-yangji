@@ -14,7 +14,7 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'https://fund-api-daben.vercel.app/api/fund',
+        target: 'https://api.fund.eastmoney.com',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
