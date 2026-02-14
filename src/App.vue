@@ -366,20 +366,51 @@ export default {
     // 获取基金历史净值数据（当日涨跌幅）
     async fetchFundHistory(code) {
       try {
-        const response = await axios.get('/api/f10/lsjz', {
-          params: {
-            fundCode: code,
-            pageIndex: 1,
-            pageSize: 1,
-            _: Date.now()
-          },
-          headers: {
-            'User-Agent': 'Mozilla/5.0',
-            'Accept': 'application/json, text/plain, */*'
+        // 在生产环境中，直接请求API，使用JSONP方式
+        return new Promise((resolve, reject) => {
+          try {
+            const script = document.createElement('script')
+            const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`
+            
+            // 定义全局回调函数
+            window[callbackName] = function(data) {
+              console.log('获取基金历史数据:', code, data)
+              resolve(data)
+              
+              // 清理
+              delete window[callbackName]
+              try {
+                document.body.removeChild(script)
+              } catch (e) {
+                // 忽略移除失败的错误
+              }
+            }
+            
+            // 构建请求URL
+            const url = `https://api.fund.eastmoney.com/f10/lsjz?fundCode=${code}&pageIndex=1&pageSize=1&_=${Date.now()}&callback=${callbackName}`
+            script.src = url
+            script.type = 'text/javascript'
+            script.charset = 'utf-8'
+            
+            // 添加到页面
+            document.body.appendChild(script)
+            
+            // 添加超时处理
+            setTimeout(() => {
+              console.error('获取基金历史数据超时:', code)
+              delete window[callbackName]
+              try {
+                document.body.removeChild(script)
+              } catch (e) {
+                // 忽略移除失败的错误
+              }
+              resolve(null)
+            }, 5000) // 5秒超时
+          } catch (error) {
+            console.error('获取基金历史数据失败:', code, error)
+            resolve(null)
           }
         })
-        console.log('获取基金历史数据:', code, response.data)
-        return response.data
       } catch (error) {
         console.error('获取基金历史数据失败:', code, error)
         return null
