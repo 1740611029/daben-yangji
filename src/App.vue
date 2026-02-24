@@ -529,15 +529,15 @@ export default {
     
     // 格式化涨跌幅
     formatGrowthRate(rate) {
+      const formattedRate = rate.toFixed(2)
       if (rate > 0) {
-        return `+${rate}`
+        return `+${formattedRate}`
       } else if (rate < 0) {
-        return `${rate}`
+        return formattedRate
       } else {
-        return '0'
+        return '0.00'
       }
-    }
-  },
+    },
   beforeDestroy() {
     // 清除定时器
     if (this.refreshTimer) {
