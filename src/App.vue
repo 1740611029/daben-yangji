@@ -611,7 +611,6 @@ body {
 .fund-form input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 15px;
   border: 1px solid rgba(200, 200, 200, 0.3);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.8);
@@ -651,7 +650,7 @@ body {
 /* 公告 */
 .notice {
   padding: 2px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-align: left;
   background: #fefbe0 !important;
   border-left: 4px solid #ffc107;
@@ -702,7 +701,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 5px;
@@ -730,7 +729,7 @@ body {
 
 /* 基金卡片 */
 .fund-card {
-  padding: 15px;
+  padding: 3px 15px;
   transform: none !important;
 }
 

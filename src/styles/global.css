@@ -49,8 +49,8 @@ body {
 
 /* 基金表单样式 */
 .fund-form {
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -113,8 +113,6 @@ body {
 
 /* 基金卡片样式 */
 .fund-card {
-  padding: 20px;
-  margin-bottom: 20px;
   color: white;
   transition: transform 0.3s ease;
 }
@@ -357,7 +355,7 @@ body {
 
   .fund-card {
     padding: 15px;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
   }
 
   .fund-value {
