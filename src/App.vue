@@ -12,7 +12,7 @@
     <div class="notice glass">
       <span class="notice-title">大笨养鸡：</span>
       <div class="notice-content-container">
-        <span class="notice-content">基金数据由第三方接口【天天基金】提供，如有更新不准，请见谅。（10秒钟更新一次涨跌幅）</span>
+        <span class="notice-content">基金数据由第三方接口【天天基金】提供，如有更新不准，请见谅。系统若有bug，反馈给ghd。（10秒钟更新一次涨跌幅）</span>
       </div>
     </div>
 
