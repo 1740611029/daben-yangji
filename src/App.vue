@@ -136,7 +136,6 @@ export default {
         // 使用本地导入的基金数据
         await storeFunds(fundData.r)
       } catch (error) {
-        console.error('初始化基金数据失败:', error)
         this.$message.error({
           message: '初始化基金数据失败: ' + error.message + '\n\n请刷新页面重试',
           duration: 6000,
@@ -515,7 +514,7 @@ export default {
         this.saveToStorage()
       } catch (error) {
       }
-    },    
+    },
     // 获取涨跌幅样式类
     getGrowthRateClass(rate) {
       if (rate > 0) {
@@ -538,10 +537,12 @@ export default {
         return '0.00'
       }
     },
-  beforeDestroy() {
-    // 清除定时器
-    if (this.refreshTimer) {
-      clearInterval(this.refreshTimer)
+    
+    beforeDestroy() {
+      // 清除定时器
+      if (this.refreshTimer) {
+        clearInterval(this.refreshTimer)
+      }
     }
   }
 }
