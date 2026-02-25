@@ -349,49 +349,19 @@ export default {
     
     // 获取基金历史净值数据（当日涨跌幅）
     async fetchFundHistory(code) {
-      try {
-        // 在生产环境中，直接请求API，使用JSONP方式
-        return new Promise((resolve, reject) => {
-          try {
-            const script = document.createElement('script')
-            const callbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`
-            
-            // 定义全局回调函数
-            window[callbackName] = function(data) {
-              resolve(data)
-              
-              // 清理
-              delete window[callbackName]
-              try {
-                document.body.removeChild(script)
-              } catch (e) {
-                // 忽略移除失败的错误
-              }
-            }
-            
-            // 构建请求URL
-            const url = `https://api.fund.eastmoney.com/f10/lsjz?fundCode=${code}&pageIndex=1&pageSize=1&_=${Date.now()}&callback=${callbackName}`
-            script.src = url
-            script.type = 'text/javascript'
-            script.charset = 'utf-8'
-            
-            // 添加到页面
-            document.body.appendChild(script)
-            
-            // 添加超时处理
-            setTimeout(() => {
-              delete window[callbackName]
-              try {
-                document.body.removeChild(script)
-              } catch (e) {
-                // 忽略移除失败的错误
-              }
-              resolve(null)
-            }, 5000) // 5秒超时
-          } catch (error) {
-            resolve(null)
-          }
-        })
+     try {
+        // const url = `https://api.fund.eastmoney.com/f10/lsjz?fundCode=${code}&pageIndex=1&pageSize=1&_=${Date.now()}&callback=${callbackName}`
+        const url = `https://daben-yangji.884688561.workers.dev/?code=${code}&_=${Date.now()}`
+
+        const res = await fetch(url)
+
+        if (!res.ok) {
+          return null
+        }
+
+        const data = await res.json()
+
+        return data
       } catch (error) {
         return null
       }
